@@ -12,6 +12,14 @@ def gen_pass(pass_length):
         password += random.choice(elements)
 
     return password
+
+def flip_coin():
+    flip = random.randint(0, 1)
+    if flip == 0:
+        return "CARA"
+    else:
+        return "CRUZ"
+    
 class MyClient(discord.Client):
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
@@ -57,10 +65,17 @@ class MyClient(discord.Client):
 
         if message.content.startswith("!password"):
             password = gen_pass(10)  # Genera una contraseña de 10 caracteres
-            await message.channel.send(f"Tu contraseña aleatoria es: {password}")   
+            await message.channel.send(f"Tu contraseña aleatoria es: {password}")
+
+    async def on_message(self, message):
+        if message.author == self.user.id:
+            return  # Evita que el bot responda a sus propios mensajes
+
+        if message.content.startswith("!coin"):  # Genera una contraseña de 10 caracteres
+            await message.channel.send(f"El resultado es: {flip_coin()}")   
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)
-client.run('Introduce tu Token de bot de Discord aquí')
+client.run('PON EL TOKEN DE TU BOT AQUÍ')
